@@ -1,0 +1,25 @@
+import json
+import time
+from kafka import KafkaProducer
+
+# Inicializar el productor de Kafka en el puerto local por defecto
+producer = KafkaProducer(
+    bootstrap_servers=['localhost:9092'],
+    value_serializer=lambda x: json.dumps(x).encode('utf-8')
+)
+
+print("--- Iniciando el envío de datos en tiempo real a Kafka ---")
+
+# Simulamos el envío continuo de eventos (por ejemplo, transacciones o lecturas)
+for i in range(100):
+    dato_en_tiempo_real = {
+        "id_evento": i,
+        "valor": i * 10,
+        "estado": "Activo"
+    }
+    
+    # Enviar al topic llamado 'datos-streaming'
+    producer.send('datos-streaming', value=dato_en_tiempo_real)
+    print(f"Enviado: {dato_en_tiempo_real}")
+    
+    time.sleep(2) # Espera 2 segundos entre cada envío
